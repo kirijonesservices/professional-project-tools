@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Project Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .tools-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tool-tab {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .tool-tab:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .tool-tab.active {
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .tool-container {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .tool-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tool-title {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .results {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .contractor-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .contractor-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .criteria-header {
+            font-weight: bold;
+            color: #555;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+
+        .change-order-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .change-order-summary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending { background: #ffc107; color: #000; }
+        .status-approved { background: #28a745; color: white; }
+        .status-rejected { background: #dc3545; color: white; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .header p { font-size: 1rem; }
+            .tool-tab { padding: 10px 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .criteria-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Professional Project Tools</h1>
+            <p>Budget Calculator • Contractor Scorecard • Change Order Tracker</p>
+        </div>
+
+        <!-- Email Capture Gate -->
+        <div id="email-gate" class="email-capture">
+            <div style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #667eea; margin-bottom: 20px; font-size: 2rem;">Get Free Access to Professional Tools</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 30px; color: #666;">Essential calculators and scorecards designed specifically for construction, renovation, and restoration professionals.</p>
+                <form id="email-form" style="margin-bottom: 20px;">
+                    <input type="email" id="email-input" placeholder="Enter your email address" required style="margin-bottom: 15px; padding: 15px; font-size: 16px; border: 2px solid #e1e5e9; border-radius: 8px; width: 100%; max-width: 300px;">
+                    <br>
+                    <button type="submit" class="btn" style="margin: 0;">Get Free Access Now</button>
+                </form>
+                <p style="font-size: 0.9rem; color: #888;">No spam. Unsubscribe anytime. Professional tools for industry experts.</p>
+            </div>
+        </div>
+
+        <div id="tools-section" style="display: none;">
+            <div class="tools-nav">
+                <button class="tool-tab active" onclick="showTool('budget')">Budget Calculator</button>
+                <button class="tool-tab" onclick="showTool('scorecard')">Contractor Scorecard</button>
+                <button class="tool-tab" onclick="showTool('tracker')">Change Order Tracker</button>
+            </div>
+
+        <!-- Budget Calculator -->
+        <div class="tool-container active" id="budget-tool">
+            <h2 class="tool-title">Project Budget Calculator</h2>
+            <form id="budget-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="project-type">Project Type</label>
+                        <select id="project-type" required>
+                            <option value="">Select Project Type</option>
+                            <option value="kitchen">Kitchen Remodel</option>
+                            <option value="bathroom">Bathroom Remodel</option>
+                            <option value="basement">Basement Finishing</option>
+                            <option value="addition">Home Addition</option>
+                            <option value="whole-house">Whole House Renovation</option>
+                            <option value="exterior">Exterior Renovation</option>
+                            <option value="roofing">Roofing</option>
+                            <option value="flooring">Flooring</option>
+                            <option value="water-damage">Water Damage Restoration</option>
+                            <option value="fire-damage">Fire Damage Restoration</option>
+                            <option value="storm-damage">Storm Damage Restoration</option>
+                            <option value="mold-remediation">Mold Remediation</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="square-footage">Square Footage</label>
+                        <input type="number" id="square-footage" min="1" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <select id="location" required>
+                            <option value="">Select Location</option>
+                            <option value="low-cost">Low Cost Area (Rural/Small Town)</option>
+                            <option value="average-cost">Average Cost Area (Suburban)</option>
+                            <option value="high-cost">High Cost Area (Major City)</option>
+                            <option value="premium-cost">Premium Area (NYC, SF, etc.)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quality-level">Quality Level</label>
+                        <select id="quality-level" required>
+                            <option value="">Select Quality Level</option>
+                            <option value="basic">Basic/Budget</option>
+                            <option value="standard">Standard/Mid-Range</option>
+                            <option value="premium">Premium/High-End</option>
+                            <option value="luxury">Luxury/Custom</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Calculate Budget</button>
+            </form>
+            <div id="budget-results" class="results"></div>
+        </div>
+
+        <!-- Contractor Scorecard -->
+        <div class="tool-container" id="scorecard-tool">
+            <h2 class="tool-title">Contractor Evaluation Scorecard</h2>
+            <form id="scorecard-form">
+                <div id="contractors-container">
+                    <!-- Contractor sections will be generated here -->
+                </div>
+                <button type="button" class="btn" onclick="addContractor()" style="margin-right: 10px;">Add Another Contractor</button>
+                <button type="submit" class="btn">Calculate Scores</button>
+            </form>
+            <div id="scorecard-results" class="results"></div>
+        </div>
+
+        <!-- Change Order Tracker -->
+        <div class="tool-container" id="tracker-tool">
+            <h2 class="tool-title">Change Order Tracker</h2>
+            <form id="tracker-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="project-name">Project Name</label>
+                        <input type="text" id="project-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="original-budget">Original Budget ($)</label>
+                        <input type="number" id="original-budget" min="0" step="0.01" required>
+                    </div>
+                </div>
+                <div id="change-orders-container">
+                    <!-- Change orders will be added here -->
+                </div>
+                <button type="button" class="btn" onclick="addChangeOrder()" style="margin-right: 10px;">Add Change Order</button>
+                <button type="submit" class="btn">Calculate Total Impact</button>
+            </form>
+            <div id="tracker-results" class="results"></div>
+        </div>
+    </div>
+
+    <script>
+        // Email Gate Logic
+        document.getElementById('email-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email-input').value;
+            
+            // Here you'll integrate with your email service
+            // For now, we'll just unlock the tools
+            console.log('Email collected:', email);
+            
+            // Hide email gate, show tools
+            document.getElementById('email-gate').style.display = 'none';
+            document.getElementById('tools-section').style.display = 'block';
+            
+            // You can add actual email service integration here
+            // Examples: ConvertKit, Mailchimp, etc.
+        });
+
+        // Navigation between tools
+        function showTool(toolName) {
+            // Hide all tools
+            document.querySelectorAll('.tool-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tool-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tool
+            document.getElementById(toolName + '-tool').classList.add('active');
+            
+            // Activate selected tab
+            event.target.classList.add('active');
+        }
+
+        // Budget Calculator Logic
+        const projectMultipliers = {
+            kitchen: { base: 150, labor: 0.35, materials: 0.45, permits: 0.05 },
+            bathroom: { base: 200, labor: 0.40, materials: 0.40, permits: 0.05 },
+            basement: { base: 75, labor: 0.45, materials: 0.35, permits: 0.05 },
+            addition: { base: 200, labor: 0.40, materials: 0.40, permits: 0.10 },
+            'whole-house': { base: 125, labor: 0.40, materials: 0.45, permits: 0.05 },
+            exterior: { base: 100, labor: 0.35, materials: 0.50, permits: 0.05 },
+            roofing: { base: 15, labor: 0.30, materials: 0.60, permits: 0.05 },
+            flooring: { base: 12, labor: 0.25, materials: 0.65, permits: 0.02 },
+            'water-damage': { base: 8, labor: 0.50, materials: 0.30, permits: 0.05 },
+            'fire-damage': { base: 25, labor: 0.45, materials: 0.35, permits: 0.10 },
+            'storm-damage': { base: 18, labor: 0.40, materials: 0.45, permits: 0.05 },
+            'mold-remediation': { base: 15, labor: 0.60, materials: 0.25, permits: 0.05 }
+        };
+
+        const locationMultipliers = {
+            'low-cost': 0.8,
+            'average-cost': 1.0,
+            'high-cost': 1.4,
+            'premium-cost': 2.0
+        };
+
+        const qualityMultipliers = {
+            basic: 0.8,
+            standard: 1.0,
+            premium: 1.5,
+            luxury: 2.5
+        };
+
+        document.getElementById('budget-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const projectType = document.getElementById('project-type').value;
+            const squareFootage = parseInt(document.getElementById('square-footage').value);
+            const location = document.getElementById('location').value;
+            const quality = document.getElementById('quality-level').value;
+            
+            const projectData = projectMultipliers[projectType];
+            const baseTotal = projectData.base * squareFootage * locationMultipliers[location] * qualityMultipliers[quality];
+            
+            const labor = baseTotal * projectData.labor;
+            const materials = baseTotal * projectData.materials;
+            const permits = baseTotal * projectData.permits;
+            const subtotal = labor + materials + permits;
+            const contingency = subtotal * 0.20;
+            const total = subtotal + contingency;
+            
+            const resultsDiv = document.getElementById('budget-results');
+            resultsDiv.innerHTML = `
+                <h3>Budget Breakdown</h3>
+                <div class="result-item">
+                    <span>Labor:</span>
+                    <span>$${labor.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                </div>
+                <div class="result-item">
+                    <span>Materials:</span>
+                    <span>$${materials.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                </div>
+                <div class="result-item">
+                    <span>Permits & Fees:</span>
+                    <span>$${permits.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                </div>
+                <div class="result-item">
+                    <span>Contingency (20%):</span>
+                    <span>$${contingency.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                </div>
+                <div class="result-item">
+                    <span>Total Estimated Budget:</span>
+                    <span>$${total.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                </div>
+            `;
+            resultsDiv.classList.add('show');
+        });
+
+        // Contractor Scorecard Logic
+        let contractorCount = 0;
+
+        const criteria = [
+            { name: 'Licensed & Insured', weight: 25, category: 'credentials' },
+            { name: 'Local References', weight: 15, category: 'reputation' },
+            { name: 'Online Reviews', weight: 10, category: 'reputation' },
+            { name: 'Portfolio Quality', weight: 15, category: 'experience' },
+            { name: 'Years in Business', weight: 10, category: 'experience' },
+            { name: 'Specialty Match', weight: 10, category: 'experience' },
+            { name: 'Bid Competitiveness', weight: 20, category: 'pricing' },
+            { name: 'Payment Terms', weight: 5, category: 'pricing' },
+            { name: 'Communication', weight: 15, category: 'professionalism' },
+            { name: 'Timeline Realism', weight: 10, category: 'professionalism' },
+            { name: 'Warranty Offered', weight: 10, category: 'professionalism' }
+        ];
+
+        function addContractor() {
+            if (contractorCount >= 3) {
+                alert('Maximum 3 contractors allowed for comparison');
+                return;
+            }
+            
+            contractorCount++;
+            const container = document.getElementById('contractors-container');
+            
+            const contractorDiv = document.createElement('div');
+            contractorDiv.className = 'contractor-section';
+            contractorDiv.innerHTML = `
+                <h3>Contractor ${contractorCount}</h3>
+                <div class="form-group">
+                    <label>Contractor Name</label>
+                    <input type="text" name="contractor-${contractorCount}-name" required>
+                </div>
+                <div class="criteria-grid">
+                    <div class="criteria-header">Criteria</div>
+                    <div class="criteria-header">Rating (1-5)</div>
+                    <div class="criteria-header">Weight</div>
+                    <div class="criteria-header">Score</div>
+                    ${criteria.map(criterion => `
+                        <div>${criterion.name}</div>
+                        <select name="contractor-${contractorCount}-${criterion.name.toLowerCase().replace(/\s+/g, '-')}" onchange="updateScore(this, ${criterion.weight})">
+                            <option value="">Select</option>
+                            <option value="1">1 - Poor</option>
+                            <option value="2">2 - Below Average</option>
+                            <option value="3">3 - Average</option>
+                            <option value="4">4 - Good</option>
+                            <option value="5">5 - Excellent</option>
+                        </select>
+                        <div>${criterion.weight}%</div>
+                        <div class="score-display" id="score-${contractorCount}-${criterion.name.toLowerCase().replace(/\s+/g, '-')}">-</div>
+                    `).join('')}
+                </div>
+                <div style="margin-top: 15px; font-weight: bold;">
+                    Total Score: <span id="total-score-${contractorCount}">0</span>/100
+                </div>
+            `;
+            
+            container.appendChild(contractorDiv);
+        }
+
+        function updateScore(selectElement, weight) {
+            const value = parseInt(selectElement.value) || 0;
+            const score = (value / 5 * weight);
+            const scoreId = selectElement.name.replace('contractor-', 'score-');
+            const scoreDisplay = document.getElementById(scoreId);
+            if (scoreDisplay) {
+                scoreDisplay.textContent = score.toFixed(1);
+            }
+            updateTotalScore(selectElement.name.split('-')[1]);
+        }
+
+        function updateTotalScore(contractorNum) {
+            let totalScore = 0;
+            criteria.forEach(criterion => {
+                const scoreElement = document.getElementById(`score-${contractorNum}-${criterion.name.toLowerCase().replace(/\s+/g, '-')}`);
+                if (scoreElement && scoreElement.textContent !== '-') {
+                    totalScore += parseFloat(scoreElement.textContent);
+                }
+            });
+            document.getElementById(`total-score-${contractorNum}`).textContent = totalScore.toFixed(1);
+        }
+
+        // Initialize with one contractor
+        addContractor();
+
+        document.getElementById('scorecard-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const results = [];
+            for (let i = 1; i <= contractorCount; i++) {
+                const nameInput = document.querySelector(`input[name="contractor-${i}-name"]`);
+                const totalScore = document.getElementById(`total-score-${i}`);
+                if (nameInput && totalScore) {
+                    results.push({
+                        name: nameInput.value || `Contractor ${i}`,
+                        score: parseFloat(totalScore.textContent)
+                    });
+                }
+            }
+            
+            results.sort((a, b) => b.score - a.score);
+            
+            const resultsDiv = document.getElementById('scorecard-results');
+            resultsDiv.innerHTML = `
+                <h3>Contractor Rankings</h3>
+                ${results.map((contractor, index) => `
+                    <div class="result-item">
+                        <span>${index + 1}. ${contractor.name}</span>
+                        <span>${contractor.score.toFixed(1)}/100</span>
+                    </div>
+                `).join('')}
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3);">
+                    <strong>Recommendation:</strong> ${results[0] ? results[0].name : 'No contractors evaluated'} 
+                    ${results[0] && results[0].score >= 80 ? '(Excellent choice)' : 
+                      results[0] && results[0].score >= 70 ? '(Good choice)' : 
+                      results[0] && results[0].score >= 60 ? '(Proceed with caution)' : 
+                      '(Consider additional contractors)'}
+                </div>
+            `;
+            resultsDiv.classList.add('show');
+        });
+
+        // Change Order Tracker Logic
+        let changeOrderCount = 0;
+
+        function addChangeOrder() {
+            changeOrderCount++;
+            const container = document.getElementById('change-orders-container');
+            
+            const changeOrderDiv = document.createElement('div');
+            changeOrderDiv.className = 'change-order-item';
+            changeOrderDiv.innerHTML = `
+                <h4>Change Order #${changeOrderCount}</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" name="co-${changeOrderCount}-description" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cost Impact ($)</label>
+                        <input type="number" name="co-${changeOrderCount}-cost" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Time Impact (days)</label>
+                        <input type="number" name="co-${changeOrderCount}-time" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select name="co-${changeOrderCount}-status" required>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Reason for Change</label>
+                    <textarea name="co-${changeOrderCount}-reason" rows="2"></textarea>
+                </div>
+            `;
+            
+            container.appendChild(changeOrderDiv);
+        }
+
+        // Initialize with one change order
+        addChangeOrder();
+
+        document.getElementById('tracker-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const originalBudget = parseFloat(document.getElementById('original-budget').value);
+            const projectName = document.getElementById('project-name').value;
+            
+            let totalCostImpact = 0;
+            let totalTimeImpact = 0;
+            let approvedChanges = 0;
+            let pendingChanges = 0;
+            let rejectedChanges = 0;
+            
+            const changeOrders = [];
+            
+            for (let i = 1; i <= changeOrderCount; i++) {
+                const description = document.querySelector(`input[name="co-${i}-description"]`)?.value;
+                const cost = parseFloat(document.querySelector(`input[name="co-${i}-cost"]`)?.value) || 0;
+                const time = parseInt(document.querySelector(`input[name="co-${i}-time"]`)?.value) || 0;
+                const status = document.querySelector(`select[name="co-${i}-status"]`)?.value;
+                const reason = document.querySelector(`textarea[name="co-${i}-reason"]`)?.value;
+                
+                if (description && status) {
+                    changeOrders.push({
+                        description,
+                        cost,
+                        time,
+                        status,
+                        reason
+                    });
+                    
+                    if (status === 'approved') {
+                        totalCostImpact += cost;
+                        totalTimeImpact += time;
+                        approvedChanges++;
+                    } else if (status === 'pending') {
+                        pendingChanges++;
+                    } else if (status === 'rejected') {
+                        rejectedChanges++;
+                    }
+                }
+            }
+            
+            const newBudget = originalBudget + totalCostImpact;
+            const budgetVariance = ((newBudget - originalBudget) / originalBudget * 100);
+            
+            const resultsDiv = document.getElementById('tracker-results');
+            resultsDiv.innerHTML = `
+                <h3>Change Order Summary - ${projectName}</h3>
+                <div class="result-item">
+                    <span>Original Budget:</span>
+                    <span>$${originalBudget.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                </div>
+                <div class="result-item">
+                    <span>Total Cost Impact:</span>
+                    <span>$${totalCostImpact.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                </div>
+                <div class="result-item">
+                    <span>New Budget:</span>
+                    <span>$${newBudget.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                </div>
+                <div class="result-item">
+                    <span>Budget Variance:</span>
+                    <span>${budgetVariance >= 0 ? '+' : ''}${budgetVariance.toFixed(1)}%</span>
+                </div>
+                <div class="result-item">
+                    <span>Time Impact:</span>
+                    <span>${totalTimeImpact} days</span>
+                </div>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3);">
+                    <div class="result-item">
+                        <span>Approved Changes:</span>
+                        <span>${approvedChanges}</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Pending Changes:</span>
+                        <span>${pendingChanges}</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Rejected Changes:</span>
+                        <span>${rejectedChanges}</span>
+                    </div>
+                </div>
+            `;
+            resultsDiv.classList.add('show');
+        });
+    </script>
+</body>
+</html>
