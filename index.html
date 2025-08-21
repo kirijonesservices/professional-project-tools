@@ -247,6 +247,10 @@
                 grid-template-columns: 1fr;
             }
             
+            .email-form {
+                flex-direction: column;
+            }
+            
             .container {
                 padding: 20px;
                 margin: 10px;
@@ -579,6 +583,58 @@
             changeOrders = [];
             updateChangeOrdersList();
         }
+
+        // Email Form Handler with Formspree Integration
+        document.getElementById('email-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitBtn = document.getElementById('submit-btn');
+            const messageDiv = document.getElementById('form-message');
+            const emailInput = form.querySelector('input[name="email"]');
+            
+            // Disable submit button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            messageDiv.innerHTML = '';
+            
+            try {
+                // Replace 'YOUR_FORM_ID' with your actual Formspree form ID
+                const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: emailInput.value,
+                        source: 'Professional Project Tools',
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    messageDiv.innerHTML = `
+                        <div class="success-message">
+                            <strong>Success!</strong> Your professional tools will be sent to ${emailInput.value} shortly.
+                        </div>
+                    `;
+                    form.reset();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                messageDiv.innerHTML = `
+                    <div class="error-message">
+                        <strong>Error:</strong> Unable to submit form. Please try again or contact us directly.
+                    </div>
+                `;
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Get Tools';
+            }
+        });
     </script>
 </body>
 </html>
