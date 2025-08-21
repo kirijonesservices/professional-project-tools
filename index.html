@@ -529,11 +529,6 @@
             document.getElementById(`total-score-${contractorNum}`).textContent = totalScore.toFixed(1);
         }
 
-        // Initialize with one contractor
-        // (This will be called from DOMContentLoaded)
-
-        // Scorecard form submission moved to DOMContentLoaded
-
         // Change Order Tracker Logic
         let changeOrderCount = 0;
 
@@ -578,7 +573,7 @@
             container.appendChild(changeOrderDiv);
         }
 
-        // Initialize change order tracker when page loads
+        // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize with one contractor for scorecard
             if (contractorCount === 0) {
@@ -597,11 +592,15 @@
                 const results = [];
                 for (let i = 1; i <= contractorCount; i++) {
                     const nameInput = document.querySelector(`input[name="contractor-${i}-name"]`);
-                    const totalScore = document.getElementById(`total-score-${i}`);
-                    if (nameInput && totalScore) {
+                    const totalScoreElement = document.getElementById(`total-score-${i}`);
+                    
+                    if (nameInput && totalScoreElement) {
+                        const name = nameInput.value || `Contractor ${i}`;
+                        const score = parseFloat(totalScoreElement.textContent) || 0;
+                        
                         results.push({
-                            name: nameInput.value || `Contractor ${i}`,
-                            score: parseFloat(totalScore.textContent)
+                            name: name,
+                            score: score
                         });
                     }
                 }
@@ -641,24 +640,13 @@
                 let pendingChanges = 0;
                 let rejectedChanges = 0;
                 
-                const changeOrders = [];
-                
                 for (let i = 1; i <= changeOrderCount; i++) {
                     const description = document.querySelector(`input[name="co-${i}-description"]`)?.value;
                     const cost = parseFloat(document.querySelector(`input[name="co-${i}-cost"]`)?.value) || 0;
                     const time = parseInt(document.querySelector(`input[name="co-${i}-time"]`)?.value) || 0;
                     const status = document.querySelector(`select[name="co-${i}-status"]`)?.value;
-                    const reason = document.querySelector(`textarea[name="co-${i}-reason"]`)?.value;
                     
                     if (description && status) {
-                        changeOrders.push({
-                            description,
-                            cost,
-                            time,
-                            status,
-                            reason
-                        });
-                        
                         if (status === 'approved') {
                             totalCostImpact += cost;
                             totalTimeImpact += time;
@@ -672,22 +660,22 @@
                 }
                 
                 const newBudget = originalBudget + totalCostImpact;
-                const budgetVariance = ((newBudget - originalBudget) / originalBudget * 100);
+                const budgetVariance = originalBudget > 0 ? ((newBudget - originalBudget) / originalBudget * 100) : 0;
                 
                 const resultsDiv = document.getElementById('tracker-results');
                 resultsDiv.innerHTML = `
                     <h3>Change Order Summary - ${projectName}</h3>
                     <div class="result-item">
                         <span>Original Budget:</span>
-                        <span>${originalBudget.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                        <span>$${originalBudget.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
                     </div>
                     <div class="result-item">
                         <span>Total Cost Impact:</span>
-                        <span>${totalCostImpact.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                        <span>$${totalCostImpact.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
                     </div>
                     <div class="result-item">
                         <span>New Budget:</span>
-                        <span>${newBudget.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                        <span>$${newBudget.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
                     </div>
                     <div class="result-item">
                         <span>Budget Variance:</span>
@@ -715,8 +703,6 @@
                 resultsDiv.classList.add('show');
             });
         });
-
-        // Change Order Tracker form submission moved to DOMContentLoaded
     </script>
 </body>
 </html>
