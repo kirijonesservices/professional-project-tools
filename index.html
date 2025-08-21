@@ -530,44 +530,9 @@
         }
 
         // Initialize with one contractor
-        addContractor();
+        // (This will be called from DOMContentLoaded)
 
-        document.getElementById('scorecard-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const results = [];
-            for (let i = 1; i <= contractorCount; i++) {
-                const nameInput = document.querySelector(`input[name="contractor-${i}-name"]`);
-                const totalScore = document.getElementById(`total-score-${i}`);
-                if (nameInput && totalScore) {
-                    results.push({
-                        name: nameInput.value || `Contractor ${i}`,
-                        score: parseFloat(totalScore.textContent)
-                    });
-                }
-            }
-            
-            results.sort((a, b) => b.score - a.score);
-            
-            const resultsDiv = document.getElementById('scorecard-results');
-            resultsDiv.innerHTML = `
-                <h3>Contractor Rankings</h3>
-                ${results.map((contractor, index) => `
-                    <div class="result-item">
-                        <span>${index + 1}. ${contractor.name}</span>
-                        <span>${contractor.score.toFixed(1)}/100</span>
-                    </div>
-                `).join('')}
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3);">
-                    <strong>Recommendation:</strong> ${results[0] ? results[0].name : 'No contractors evaluated'} 
-                    ${results[0] && results[0].score >= 80 ? '(Excellent choice)' : 
-                      results[0] && results[0].score >= 70 ? '(Good choice)' : 
-                      results[0] && results[0].score >= 60 ? '(Proceed with caution)' : 
-                      '(Consider additional contractors)'}
-                </div>
-            `;
-            resultsDiv.classList.add('show');
-        });
+        // Scorecard form submission moved to DOMContentLoaded
 
         // Change Order Tracker Logic
         let changeOrderCount = 0;
@@ -613,94 +578,145 @@
             container.appendChild(changeOrderDiv);
         }
 
-        // Initialize with one change order
-        addChangeOrder();
-
-        document.getElementById('tracker-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const originalBudget = parseFloat(document.getElementById('original-budget').value);
-            const projectName = document.getElementById('project-name').value;
-            
-            let totalCostImpact = 0;
-            let totalTimeImpact = 0;
-            let approvedChanges = 0;
-            let pendingChanges = 0;
-            let rejectedChanges = 0;
-            
-            const changeOrders = [];
-            
-            for (let i = 1; i <= changeOrderCount; i++) {
-                const description = document.querySelector(`input[name="co-${i}-description"]`)?.value;
-                const cost = parseFloat(document.querySelector(`input[name="co-${i}-cost"]`)?.value) || 0;
-                const time = parseInt(document.querySelector(`input[name="co-${i}-time"]`)?.value) || 0;
-                const status = document.querySelector(`select[name="co-${i}-status"]`)?.value;
-                const reason = document.querySelector(`textarea[name="co-${i}-reason"]`)?.value;
-                
-                if (description && status) {
-                    changeOrders.push({
-                        description,
-                        cost,
-                        time,
-                        status,
-                        reason
-                    });
-                    
-                    if (status === 'approved') {
-                        totalCostImpact += cost;
-                        totalTimeImpact += time;
-                        approvedChanges++;
-                    } else if (status === 'pending') {
-                        pendingChanges++;
-                    } else if (status === 'rejected') {
-                        rejectedChanges++;
-                    }
-                }
+        // Initialize change order tracker when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize with one contractor for scorecard
+            if (contractorCount === 0) {
+                addContractor();
             }
             
-            const newBudget = originalBudget + totalCostImpact;
-            const budgetVariance = ((newBudget - originalBudget) / originalBudget * 100);
+            // Initialize with one change order for tracker
+            if (changeOrderCount === 0) {
+                addChangeOrder();
+            }
             
-            const resultsDiv = document.getElementById('tracker-results');
-            resultsDiv.innerHTML = `
-                <h3>Change Order Summary - ${projectName}</h3>
-                <div class="result-item">
-                    <span>Original Budget:</span>
-                    <span>$${originalBudget.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
-                </div>
-                <div class="result-item">
-                    <span>Total Cost Impact:</span>
-                    <span>$${totalCostImpact.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
-                </div>
-                <div class="result-item">
-                    <span>New Budget:</span>
-                    <span>$${newBudget.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
-                </div>
-                <div class="result-item">
-                    <span>Budget Variance:</span>
-                    <span>${budgetVariance >= 0 ? '+' : ''}${budgetVariance.toFixed(1)}%</span>
-                </div>
-                <div class="result-item">
-                    <span>Time Impact:</span>
-                    <span>${totalTimeImpact} days</span>
-                </div>
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3);">
+            // Set up scorecard form submission
+            document.getElementById('scorecard-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const results = [];
+                for (let i = 1; i <= contractorCount; i++) {
+                    const nameInput = document.querySelector(`input[name="contractor-${i}-name"]`);
+                    const totalScore = document.getElementById(`total-score-${i}`);
+                    if (nameInput && totalScore) {
+                        results.push({
+                            name: nameInput.value || `Contractor ${i}`,
+                            score: parseFloat(totalScore.textContent)
+                        });
+                    }
+                }
+                
+                results.sort((a, b) => b.score - a.score);
+                
+                const resultsDiv = document.getElementById('scorecard-results');
+                resultsDiv.innerHTML = `
+                    <h3>Contractor Rankings</h3>
+                    ${results.map((contractor, index) => `
+                        <div class="result-item">
+                            <span>${index + 1}. ${contractor.name}</span>
+                            <span>${contractor.score.toFixed(1)}/100</span>
+                        </div>
+                    `).join('')}
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3);">
+                        <strong>Recommendation:</strong> ${results[0] ? results[0].name : 'No contractors evaluated'} 
+                        ${results[0] && results[0].score >= 80 ? '(Excellent choice)' : 
+                          results[0] && results[0].score >= 70 ? '(Good choice)' : 
+                          results[0] && results[0].score >= 60 ? '(Proceed with caution)' : 
+                          '(Consider additional contractors)'}
+                    </div>
+                `;
+                resultsDiv.classList.add('show');
+            });
+            
+            // Set up tracker form submission
+            document.getElementById('tracker-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const originalBudget = parseFloat(document.getElementById('original-budget').value);
+                const projectName = document.getElementById('project-name').value;
+                
+                let totalCostImpact = 0;
+                let totalTimeImpact = 0;
+                let approvedChanges = 0;
+                let pendingChanges = 0;
+                let rejectedChanges = 0;
+                
+                const changeOrders = [];
+                
+                for (let i = 1; i <= changeOrderCount; i++) {
+                    const description = document.querySelector(`input[name="co-${i}-description"]`)?.value;
+                    const cost = parseFloat(document.querySelector(`input[name="co-${i}-cost"]`)?.value) || 0;
+                    const time = parseInt(document.querySelector(`input[name="co-${i}-time"]`)?.value) || 0;
+                    const status = document.querySelector(`select[name="co-${i}-status"]`)?.value;
+                    const reason = document.querySelector(`textarea[name="co-${i}-reason"]`)?.value;
+                    
+                    if (description && status) {
+                        changeOrders.push({
+                            description,
+                            cost,
+                            time,
+                            status,
+                            reason
+                        });
+                        
+                        if (status === 'approved') {
+                            totalCostImpact += cost;
+                            totalTimeImpact += time;
+                            approvedChanges++;
+                        } else if (status === 'pending') {
+                            pendingChanges++;
+                        } else if (status === 'rejected') {
+                            rejectedChanges++;
+                        }
+                    }
+                }
+                
+                const newBudget = originalBudget + totalCostImpact;
+                const budgetVariance = ((newBudget - originalBudget) / originalBudget * 100);
+                
+                const resultsDiv = document.getElementById('tracker-results');
+                resultsDiv.innerHTML = `
+                    <h3>Change Order Summary - ${projectName}</h3>
                     <div class="result-item">
-                        <span>Approved Changes:</span>
-                        <span>${approvedChanges}</span>
+                        <span>Original Budget:</span>
+                        <span>${originalBudget.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
                     </div>
                     <div class="result-item">
-                        <span>Pending Changes:</span>
-                        <span>${pendingChanges}</span>
+                        <span>Total Cost Impact:</span>
+                        <span>${totalCostImpact.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
                     </div>
                     <div class="result-item">
-                        <span>Rejected Changes:</span>
-                        <span>${rejectedChanges}</span>
+                        <span>New Budget:</span>
+                        <span>${newBudget.toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
                     </div>
-                </div>
-            `;
-            resultsDiv.classList.add('show');
+                    <div class="result-item">
+                        <span>Budget Variance:</span>
+                        <span>${budgetVariance >= 0 ? '+' : ''}${budgetVariance.toFixed(1)}%</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Time Impact:</span>
+                        <span>${totalTimeImpact} days</span>
+                    </div>
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3);">
+                        <div class="result-item">
+                            <span>Approved Changes:</span>
+                            <span>${approvedChanges}</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Pending Changes:</span>
+                            <span>${pendingChanges}</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Rejected Changes:</span>
+                            <span>${rejectedChanges}</span>
+                        </div>
+                    </div>
+                `;
+                resultsDiv.classList.add('show');
+            });
         });
+
+        // Change Order Tracker form submission moved to DOMContentLoaded
     </script>
 </body>
 </html>
